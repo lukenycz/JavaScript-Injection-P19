@@ -19,6 +19,7 @@ class ActionViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(javaScriptMethods))
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -40,6 +41,31 @@ class ActionViewController: UIViewController {
                 
                 }
             }
+        }
+    }
+    @objc func javaScriptMethods() {
+        let ac = UIAlertController(title: "Choose the action",
+                                   message: nil,
+                                   preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Show page title",
+                                   style: .default,
+                                   handler: JSMethods))
+        ac.addAction(UIAlertAction(title: "Show page URL",
+                                   style: .default,
+                                   handler: JSMethods))
+        ac.addAction(UIAlertAction(title: "Cancel",
+                                   style: .cancel,
+                                   handler: nil))
+        present(ac, animated: true)
+    }
+    func JSMethods(action: UIAlertAction) {
+        guard let actionTitle = action.title else {return}
+        
+        if actionTitle.contains("title") {
+            script.text = "alert(document.title);"
+
+        } else if actionTitle.contains("URL") {
+            script.text = "alert(document.URL);"
         }
     }
     @objc func adjustForKeyboard(notification: Notification) {
